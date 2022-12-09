@@ -23,7 +23,7 @@ public class DemoTcpConfiguration {
     private TcpNetClientConnectionFactory prepareDemoTcpNetClientConnectionFactory(){
         TcpNetClientConnectionFactory factory =
                 new TcpNetClientConnectionFactory("localhost", 8081);
-        factory.setDeserializer(new ByteArraySingleTerminatorSerializer((byte) '|'));
+        factory.setDeserializer(new ByteArraySingleTerminatorSerializer((byte) '\n'));
         return factory;
     }
 
