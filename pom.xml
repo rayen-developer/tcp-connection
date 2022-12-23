@@ -5,13 +5,13 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>2.5.1</version>
+		<version>2.7.0</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.example</groupId>
-	<artifactId>demo</artifactId>
+	<artifactId>sbe</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>demo</name>
+	<name>sbe</name>
 	<description>Demo project for Spring Boot</description>
 	<properties>
 		<java.version>1.8</java.version>
@@ -19,12 +19,9 @@
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-web</artifactId>
+			<artifactId>spring-boot-starter</artifactId>
 		</dependency>
-		<dependency>
-			<groupId>org.springframework.integration</groupId>
-			<artifactId>spring-integration-ip</artifactId>
-		</dependency>
+
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
@@ -32,9 +29,15 @@
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.integration</groupId>
-			<artifactId>spring-integration-test</artifactId>
-			<scope>test</scope>
-		</dependency>
+			<artifactId>spring-integration-ip</artifactId>
+		</dependency>		
+       	        <dependency>
+           	        <groupId>org.agrona</groupId>
+           	        <artifactId>agrona</artifactId>
+                        <version>1.17.1</version>
+       	        </dependency>
+    
+		
 	</dependencies>
 
 	<build>
@@ -43,7 +46,63 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
+			
+			<plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>1.6.0</version>
+                <executions>
+                    <execution>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>java</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <includeProjectDependencies>false</includeProjectDependencies>
+                    <includePluginDependencies>true</includePluginDependencies>
+                    <mainClass>uk.co.real_logic.sbe.SbeTool</mainClass>
+                    <systemProperties>
+                        <systemProperty>
+                            <key>sbe.output.dir</key>
+                            <value>${project.build.directory}/generated-sources/java</value>
+                        </systemProperty>
+                    </systemProperties>
+                    <arguments>
+                        <argument>${project.basedir}/src/main/resources/mdg_binary_sbe_input.xml</argument>
+                    </arguments>
+                    <workingDirectory>${project.build.directory}/generated-sources/java</workingDirectory>
+                </configuration>
+                <dependencies>
+                    <dependency>
+                        <groupId>uk.co.real-logic</groupId>
+                        <artifactId>sbe-tool</artifactId>
+                        <version>1.27.0</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <version>3.0.0</version>
+                <executions>
+                    <execution>
+                        <id>add-source</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>add-source</goal>
+                        </goals>
+                        <configuration>
+                            <sources>
+                                <source>${project.build.directory}/generated-sources/java/</source>
+                            </sources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
 		</plugins>
 	</build>
 
 </project>
+

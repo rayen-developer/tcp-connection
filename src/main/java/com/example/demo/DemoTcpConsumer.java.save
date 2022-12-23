@@ -15,22 +15,19 @@ public class DemoTcpConsumer {
     public void consume(byte[] bytes) throws InstantiationException, IllegalAccessException {
 	final MessageHeaderDecoder headerDecoder = new MessageHeaderDecoder();
 	final FullTradeInformationDecoder fullTradeInformationDecoder = new FullTradeInformationDecoder();
-	DirectBuffer buffer = new UnsafeBuffer();
-	buffer.wrap(bytes);
-	headerDecoder.wrap(buffer, 0);
-	System.out.println(headerDecoder);
-	//System.out.println(buffer.byteArray().toString());
-	//fullTradeInformationDecoder.wrapAndApplyHeader(buffer, 0, headerDecoder);
-	//fullTradeInformationDecoder.wrap(buffer, bufferOffset, actingBlockLength, actingVersion);
-	//System.out.println(ahmed);
-	//fullTradeInformationDecoder.wrapAndApplyHeader(buffer,0, headerDecoder);
+	DirectBuffer ahmed = new UnsafeBuffer();
+	ahmed.wrap(bytes);
+	int bufferOffset = 0;
+	headerDecoder.wrap(ahmed, bufferOffset);
+	final int actingBlockLength = headerDecoder.blockLength();
+	final int actingVersion = headerDecoder.version();
+	bufferOffset += headerDecoder.encodedLength();
+	fullTradeInformationDecoder.wrap(ahmed, bufferOffset, actingBlockLength, actingVersion);
+	System.out.println(fullTradeInformationDecoder.);
+	//fullTradeInformationDecoder.wrapAndApplyHeader(ahmed,0, headerDecoder);
 	//System.out.println(fullTradeInformationDecoder.buffer());
 	//fullTradeInformationDecoder.wrapAndApplyHeader(rayen, fullTradeInformationDecoder.offset(), headerDecoder);
        //System.out.println(headerDecoder.templateId());
-	//for(int i=0;i<4;i++){
-	//	System.out.println(bytes[i]);
-	//}
-	//System.out.println(bytes[0]);
 	//System.out.println(new String(bytes));
- }
+    }
 }
